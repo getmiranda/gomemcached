@@ -8,6 +8,8 @@ import (
 	"errors"
 	"strings"
 	"sync"
+
+	"github.com/getmiranda/gomemcached/item"
 )
 
 var (
@@ -91,8 +93,12 @@ func (m *mockServer) getMockKey(op Operation, args ...Args) string {
 		for _, v := range args[0] {
 			var buffer bytes.Buffer
 			enc := gob.NewEncoder(&buffer)
+			it, ok := v.(*item.Item)
+			if ok {
+				it.Expiration = 0
+				it.Flags = 0
+			}
 			enc.Encode(v)
-
 			key += m.cleanValue(buffer.Bytes())
 		}
 	}
