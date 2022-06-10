@@ -16,7 +16,8 @@ var (
 		memcacheClient: &clientMock{},
 	}
 
-	ErrMockNotFound = errors.New("mock not found")
+	ErrMockNotFound        = errors.New("mock not found")
+	ErrInterfaceConvertion = errors.New("interface convertion error")
 )
 
 type mockServer struct {
