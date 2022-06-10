@@ -28,7 +28,11 @@ func (c *clientMock) Get(key string) (*item.Item, error) {
 	if mock.Error != nil {
 		return nil, mock.Error
 	}
-	return mock.Return.(*item.Item), nil
+	item, ok := mock.Return.(*item.Item)
+	if !ok {
+		return nil, ErrInterfaceConvertion
+	}
+	return item, nil
 }
 
 func (c *clientMock) Touch(key string, seconds int32) (err error) {
@@ -54,7 +58,11 @@ func (c *clientMock) GetMulti(keys []string) (map[string]*item.Item, error) {
 	if mock.Error != nil {
 		return nil, mock.Error
 	}
-	return mock.Return.(map[string]*item.Item), nil
+	items, ok := mock.Return.(map[string]*item.Item)
+	if !ok {
+		return nil, ErrInterfaceConvertion
+	}
+	return items, nil
 }
 
 func (c *clientMock) Set(item *item.Item) error {
@@ -156,7 +164,11 @@ func (c *clientMock) Increment(key string, delta uint64) (newValue uint64, err e
 	if mock.Error != nil {
 		return 0, mock.Error
 	}
-	return mock.Return.(uint64), nil
+	newValue, ok := mock.Return.(uint64)
+	if !ok {
+		return 0, ErrInterfaceConvertion
+	}
+	return newValue, nil
 }
 
 func (c *clientMock) Decrement(key string, delta uint64) (newValue uint64, err error) {
@@ -169,7 +181,11 @@ func (c *clientMock) Decrement(key string, delta uint64) (newValue uint64, err e
 	if mock.Error != nil {
 		return 0, mock.Error
 	}
-	return mock.Return.(uint64), nil
+	newValue, ok := mock.Return.(uint64)
+	if !ok {
+		return 0, ErrInterfaceConvertion
+	}
+	return newValue, nil
 }
 
 func (c *clientMock) Exists(key string) (bool, error) {
@@ -182,5 +198,9 @@ func (c *clientMock) Exists(key string) (bool, error) {
 	if mock.Error != nil {
 		return false, mock.Error
 	}
-	return mock.Return.(bool), nil
+	exists, ok := mock.Return.(bool)
+	if !ok {
+		return false, ErrInterfaceConvertion
+	}
+	return exists, nil
 }
